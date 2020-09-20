@@ -1,0 +1,41 @@
+version: '3.7'
+services:
+
+  fhir-api:
+    image: hapiproject/hapi:v5.0.0
+    environment:
+      - server_address=http://localhost:8090/hapi-fhir-jpaserver/fhir
+    ports:
+      - "8090:8080"
+    volumes:
+      - hapi-data:/data/hapi
+    restart: on-failure
+    logging:
+      options:
+        max-size: 10m
+  
+  ui:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - fhir-api
+    ports:
+      - 3000:3000
+    restart: on-failure
+    volumes:
+      - ./src:/app/src:delegated
+      - ./public:/app/public:delegated
+    logging:
+      options:
+        max-size: 10m
+    stdin_open: true
+
+volumes:
+    hapi-data:
+
+networks:
+  public:
+  private:
+    driver: bridge
+    internal: true
