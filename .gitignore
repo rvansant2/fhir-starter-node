@@ -102,3 +102,9 @@ dist
 
 # TernJS port file
 .tern-port
+
+# patient JSON
+output/fhir/*.json
+
+# synthea jar
+synthea/synthea-with-dependencies.jar
